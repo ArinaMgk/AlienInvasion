@@ -1,3 +1,4 @@
+# UTF-8 RFX [Python]
 import pygame as pyg
 
 class Player:
@@ -11,9 +12,16 @@ class Player:
         self.rect.midtop = self.screen_rect.midtop
 
         # flags
-        self.mov_direction = 0 # [0 kept] [1 left] [2 right]
+        self.mov_direction = 0 # [0 or 3 kept] [1 left] [2 right]
         self.posi = float(self.rect.x)
-        self.speed = 0.5
+        self.speed = 1.0
+
+        # bullet
+        self.bullet_speed = 1
+        self.bullet_color = (160, 60, 60)
+        self.bullet_width = 5
+        self.bullet_height = 15
+
 
     def evolve(self):
         if self.mov_direction == 1 and self.rect.left > 0:
