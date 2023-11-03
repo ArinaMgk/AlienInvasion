@@ -10,5 +10,14 @@ class Player:
         # set position top-mid(p2), or at p0 point
         self.rect.midtop = self.screen_rect.midtop
 
+        # flags
+        self.mov_direction = 0 # [0 kept] [1 left] [2 right]
+
+    def evolve(self):
+        if self.mov_direction == 1:
+            self.rect.x -= 1
+        elif self.mov_direction == 2:
+            self.rect.x += 1
+
     def on_blit(self):
         self.screen.blit(self.image, self.rect)
