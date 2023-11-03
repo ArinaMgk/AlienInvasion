@@ -1,3 +1,5 @@
+# ASCII RFX [Python]
+# Learn base on <Python Crash Course, 2nd Edition ...>
 import sys
 import pygame as pyg
 from settings import Settings
@@ -9,7 +11,7 @@ class AlienInvasion:
         pyg.init()
         self.setting = Settings()
         self.screen = pyg.display.set_mode((self.setting.screen_width, self.setting.screen_height))
-        pyg.display.set_caption("Alien Invasion [Arina studying Python]")
+        pyg.display.set_caption("Alien Invasion [Arina studying Python Pygame]")
         self.player = Player(self)
 
     def run_game(self):
@@ -28,6 +30,8 @@ class AlienInvasion:
                     self.player.mov_direction = 1
                 elif event.key == pyg.K_RIGHT:
                     self.player.mov_direction = 2
+                elif event.key == pyg.K_q:
+                    sys.exit()
             elif event.type == pyg.KEYUP:
                 if event.key == pyg.K_LEFT or event.key == pyg.K_RIGHT:
                     self.player.mov_direction = 0
