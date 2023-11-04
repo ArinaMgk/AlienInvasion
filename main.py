@@ -6,6 +6,10 @@ import pygame as pyg
 from settings import Settings
 from player import Player
 from bullet import Bullet
+from ghost import Ghost
+
+
+GHOST_HEIGHT = GHOST_WIDTH = 60
 
 class AlienInvasion:
     """《外星人入侵》管理游戏资源和行为的类 """
@@ -24,7 +28,8 @@ class AlienInvasion:
         pyg.display.set_caption("Alien Invasion [Arina studying Python Pygame]")
         self.player = Player(self)
         self.bullets = pyg.sprite.Group()
-
+        self.ghosts = pyg.sprite.Group()
+        self.ghosts.add(Ghost(self, GHOST_WIDTH, self.screen.get_height() - GHOST_HEIGHT))
 
     def run_game(self):
         while True:
@@ -64,6 +69,8 @@ class AlienInvasion:
         self.player.on_blit()
         for bullet in self.bullets.sprites():
             bullet.on_draw()
+        self.ghosts.draw(self.screen)
+
         pyg.display.flip()  # re-chrome
 
     def _fire(self):

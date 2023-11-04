@@ -14,10 +14,10 @@ class Player:
         # flags
         self.mov_direction = 0 # [0 or 3 kept] [1 left] [2 right]
         self.posi = float(self.rect.x)
-        self.speed = 1.0
+        self.speed = 0.7
 
         # bullet
-        self.bullet_speed = 1
+        self.bullet_speed = 3
         self.bullet_color = (160, 60, 60)
         self.bullet_width = 5
         self.bullet_height = 15
