@@ -76,6 +76,10 @@ class AlienInvasion:
         self.player.on_blit()
         for bullet in self.bullets.sprites():
             bullet.on_draw()
+
+        # 是否有子弹射中鬼桑
+        collsions = pyg.sprite.groupcollide(self.bullets,self.ghosts,True,True)
+
         self.ghosts.draw(self.screen)
 
         pyg.display.flip()  # re-chrome

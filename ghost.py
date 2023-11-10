@@ -15,13 +15,24 @@ class Ghost(Sprite):
 
         self.posi_x = float(self.rect.x)
         self.posi_y = float(self.rect.y)
+        self.posi_xoffset = 0.0
+        self.direction_x = 1 # 0[none] 1[left] 2[right]
 
-        self.speed_x = 0.3
-        self.speed_y = -0.1
+        self.speed_x = 0.02
+        self.speed_y = -0.02
 
     def update(self): # special-identifier called by Sprite
         self.posi_y += self.speed_y
+        if self.direction_x == 1:
+            self.posi_xoffset -= self.speed_x
+        elif self.direction_x == 2:
+            self.posi_xoffset += self.speed_x
+
+        if abs(self.posi_xoffset) > self.rect.width // 2:
+            self.direction_x = int(self.direction_x == 1) + 1
+
         self.rect.y = self.posi_y
+        self.rect.x = self.posi_x + self.posi_xoffset
 
     def on_draw(self):
         pyg.draw.rect(self.screen, self.color, self.rect)
