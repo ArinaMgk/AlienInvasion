@@ -37,7 +37,8 @@ class AlienInvasion:
                 self.ghosts.add(Ghost(self, GHOST_WIDTH * (i*2+1), self.screen.get_height() - GHOST_HEIGHT * (1+2*j)))
 
     def run_game(self):
-        while True:
+        self.lose = 0
+        while self.ghosts:
             self._check_events()
 
             self.player.evolve()
@@ -48,8 +49,14 @@ class AlienInvasion:
                     self.bullets.remove(bullet)
 
             self.ghosts.update()
+            for ghost in self.ghosts:
+                if ghost.rect.top < PLAYER_HEIGHT:
+                    self.lose += 1
+                    self.ghosts.remove(ghost)
+
 
             self._update_screen()
+        print(f"Thanks for your playing. You lose is {self.lose}.")
 
     def _check_events(self):
         """ 响应键盘和鼠标事件 """

@@ -19,7 +19,7 @@ class Ghost(Sprite):
         self.direction_x = 1 # 0[none] 1[left] 2[right]
 
         self.speed_x = 0.02
-        self.speed_y = -0.02
+        self.speed_y = -0.05
 
     def update(self): # special-identifier called by Sprite
         self.posi_y += self.speed_y
