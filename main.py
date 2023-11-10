@@ -8,8 +8,8 @@ from player import Player
 from bullet import Bullet
 from ghost import Ghost
 
-
 GHOST_HEIGHT = GHOST_WIDTH = 60
+PLAYER_HEIGHT = 60
 
 class AlienInvasion:
     """《外星人入侵》管理游戏资源和行为的类 """
@@ -28,8 +28,13 @@ class AlienInvasion:
         pyg.display.set_caption("Alien Invasion [Arina studying Python Pygame]")
         self.player = Player(self)
         self.bullets = pyg.sprite.Group()
+
+        self.ghost_xnumber = self.setting.screen_width // (GHOST_WIDTH * 2)
+        self.ghost_ynumber = (self.setting.screen_height - PLAYER_HEIGHT) // 2 // (GHOST_HEIGHT * 2)
         self.ghosts = pyg.sprite.Group()
-        self.ghosts.add(Ghost(self, GHOST_WIDTH, self.screen.get_height() - GHOST_HEIGHT))
+        for j in range(self.ghost_ynumber):
+            for i in range(self.ghost_xnumber):
+                self.ghosts.add(Ghost(self, GHOST_WIDTH * (i*2+1), self.screen.get_height() - GHOST_HEIGHT * (1+2*j)))
 
     def run_game(self):
         while True:
@@ -41,6 +46,8 @@ class AlienInvasion:
             for bullet in self.bullets.copy():
                 if bullet.rect.bottom > self.screen.get_height():
                     self.bullets.remove(bullet)
+
+            self.ghosts.update()
 
             self._update_screen()
 
