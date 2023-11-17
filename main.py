@@ -7,6 +7,9 @@ from settings import Settings
 from player import Player
 from bullet import Bullet
 from ghost import Ghost
+from button import Button
+from stats import GameStats
+from time import sleep
 
 GHOST_HEIGHT = GHOST_WIDTH = 60
 PLAYER_HEIGHT = 60
@@ -16,6 +19,7 @@ class AlienInvasion:
     def __init__(self):
         pyg.init()
         self.setting = Settings()
+        self.stats = GameStats(self)
         #: set window size
         if 1 == 1:
             self.screen = pyg.display.set_mode((self.setting.screen_width, self.setting.screen_height))
@@ -24,6 +28,7 @@ class AlienInvasion:
             self.screen = pyg.display.set_mode((0,0), pyg.FULLSCREEN)
             self.setting.screen_width = self.screen.get_rect().width
             self.setting.screen_height = self.screen.get_rect().height
+        self.flag_active = False
 
         pyg.display.set_caption("Alien Invasion [Arina studying Python Pygame]")
         self.player = Player(self)
@@ -35,27 +40,31 @@ class AlienInvasion:
         for j in range(self.ghost_ynumber):
             for i in range(self.ghost_xnumber):
                 self.ghosts.add(Ghost(self, GHOST_WIDTH * (i*2+1), self.screen.get_height() - GHOST_HEIGHT * (1+2*j)))
+                self.stats.shipleft += 1
+        self.stats.shipmax = self.stats.shipleft
+
+        self.play_btn = Button(self, "Start")
 
     def run_game(self):
         self.lose = 0
         while self.ghosts:
             self._check_events()
+            if self.flag_active:
+                self.player.evolve()
 
-            self.player.evolve()
+                self.bullets.update()
+                for bullet in self.bullets.copy():
+                    if bullet.rect.bottom > self.screen.get_height():
+                        self.bullets.remove(bullet)
 
-            self.bullets.update()
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom > self.screen.get_height():
-                    self.bullets.remove(bullet)
-
-            self.ghosts.update()
-            for ghost in self.ghosts:
-                if ghost.rect.top < PLAYER_HEIGHT:
-                    self.lose += 1
-                    self.ghosts.remove(ghost)
-
+                self.ghosts.update()
+                for ghost in self.ghosts:
+                    if ghost.rect.top < PLAYER_HEIGHT:
+                        self.lose += 1
+                        self.ghosts.remove(ghost)
 
             self._update_screen()
+        self.flag_active = False
         print(f"Thanks for your playing. You lose is {self.lose}.")
 
     def _check_events(self):
@@ -78,16 +87,28 @@ class AlienInvasion:
                     self.player.mov_direction &= ~1
                 elif event.key == pyg.K_RIGHT:
                     self.player.mov_direction &= ~2
+
+            elif event.type == pyg.MOUSEBUTTONDOWN:
+                cursor = pyg.mouse.get_pos()
+                if self.play_btn.rect.collidepoint(cursor) and ~self.flag_active:
+                    self.flag_active = True
     def _update_screen(self):
         self.screen.fill(self.setting.bg_color)
+
         self.player.on_blit()
         for bullet in self.bullets.sprites():
             bullet.on_draw()
 
         # 是否有子弹射中鬼桑
         collsions = pyg.sprite.groupcollide(self.bullets,self.ghosts,True,True)
+        if(collsions):
+            self.stats.shipleft -= 1
+
 
         self.ghosts.draw(self.screen)
+
+        if not self.flag_active:
+            self.play_btn.on_draw()
 
         pyg.display.flip()  # re-chrome
 
