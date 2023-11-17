@@ -10,6 +10,7 @@ from ghost import Ghost
 from button import Button
 from stats import GameStats
 from time import sleep
+from scoreboard import Scoreboard
 
 GHOST_HEIGHT = GHOST_WIDTH = 60
 PLAYER_HEIGHT = 60
@@ -44,6 +45,7 @@ class AlienInvasion:
         self.stats.shipmax = self.stats.shipleft
 
         self.play_btn = Button(self, "Start")
+        self.scoreboard = Scoreboard(self)
 
     def run_game(self):
         self.lose = 0
@@ -103,9 +105,10 @@ class AlienInvasion:
         collsions = pyg.sprite.groupcollide(self.bullets,self.ghosts,True,True)
         if(collsions):
             self.stats.shipleft -= 1
-
+            self.scoreboard.on_update()
 
         self.ghosts.draw(self.screen)
+        self.scoreboard.on_draw()
 
         if not self.flag_active:
             self.play_btn.on_draw()
